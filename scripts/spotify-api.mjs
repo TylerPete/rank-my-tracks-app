@@ -43,7 +43,7 @@ async function getNewAccessToken() {
     }
 }
 
-export async function searchForResults(keywordString, accessToken, limit = 20, type = "artist,album") {
+export async function searchForArtists(keywordString, accessToken, limit = 20, type = "artist") {
     let searchEndpointURL = buildSearchURL(keywordString, limit, type);
 
     const options = {
@@ -56,7 +56,6 @@ export async function searchForResults(keywordString, accessToken, limit = 20, t
 
     try {
         const response = await fetch(searchEndpointURL, options);
-
         if (!response.ok) {
             throw new Error("Spotify API error");
         }
@@ -64,9 +63,9 @@ export async function searchForResults(keywordString, accessToken, limit = 20, t
         const data = await response.json();
 
         console.log("Logging search results to console: ");
-        console.log(data);
+        console.log(data.artists.items);
 
-        return data;  //change this to a more narrowed-data set of information later
+        return data.artists.items;  //change this to a more narrowed-data set of information later
 
     } catch (error) {
         console.error("Error fetching search results", error);
