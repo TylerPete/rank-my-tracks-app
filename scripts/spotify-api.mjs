@@ -3,6 +3,7 @@
 //Fetching data from Spotify API.
 //Functions: getNewAccessToken(clientId, clientSecret), searchForResults(keywordString, type), getAlbumsByArtist(artistId), getTracksByAlbum(albumId).
 import { CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_URL, API_BASE_URL } from "./config.mjs";
+import Track from "./track.mjs";    //is this needed here??
 
 export async function loadAccessToken() {
     if (!isAccessTokenExpired()) {
@@ -40,6 +41,42 @@ async function getNewAccessToken() {
         console.error("Error fetching access token: ", error);
         return null;
     }
+}
+
+export async function searchForResults(keywordString, accessToken, limit = 20, type = "artist,album") {
+    let searchEndpointURL = buildSearchURL(keywordString, limit, type);
+
+    const options = {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+        }
+    }
+
+    try {
+        const response = await fetch(searchEndpointURL, options);
+
+        if (!response.ok) {
+            throw new Error("Spotify API error");
+        }
+
+        const data = await response.json();
+
+        console.log("Logging search results to console: ");
+        console.log(data);
+
+        return data;  //change this to a more narrowed-data set of information later
+
+    } catch (error) {
+        console.error("Error fetching search results", error);
+
+        return null;
+    }
+}
+
+function buildSearchURL(keywordString, limit, type) {
+    return `${API_BASE_URL}search?q=${encodeURIComponent(keywordString)}&type=${type}&limit=${limit}`;
 }
 
 function saveAccessToken(accessToken) {
