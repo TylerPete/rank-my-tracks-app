@@ -7,20 +7,35 @@
     <title>RankMyTracks App</title>
 
     <link rel="stylesheet" href="styles/main.css">
-    </>
     <script src="scripts/main.mjs" type="module" defer></script>
 
     <!-- FILL IN OTHER ESSENTIAL META TAGS AND OTHER TAGS WITHIN <head> -->
 </head>
 
 <body>
-    <h1>[Site under construction -- JavaScript modules in progress.</h1>
-    <p>Please see browser console for evidence of work in progress.</p>
+    <header class="searchHeader">
+        <div class="logo">
+            <img src="images/rmt-icon.png" alt="RankMyTracks icon" width="44" height="44" />
+        </div>
 
-    <div id="searchResultsDiv">
-        <!-- Dynamically-generated search results here-->
-    </div>
+        <div class="search">
+            <form>
+                <input type="text" id="searchBox" name="q" placeholder="Search artists..." required />
+                <button type="submit" id="searchButton">Search</button>
+            </form>
+        </div>
+    </header>
+    <main>
+        <h1>[Site under construction -- JavaScript modules in progress.</h1>
+        <p>Please see browser console for evidence of work in progress.</p>
 
+        <div id="searchResultsDiv">
+            <!-- Dynamically-generated search results here-->
+        </div>
+    </main>
+    <footer>
+        <!-- put stuff here-->
+    </footer>
 </body>
 
 </html>

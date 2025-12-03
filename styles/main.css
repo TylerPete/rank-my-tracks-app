@@ -13,11 +13,33 @@
 * {
     background-color: var(--dark-grey-background);
     color: var(--offwhite-grey-text);
+    margin: 0;
 }
 
 body {
     background-color: var(--dark-grey-background);
     color: var(--offwhite-grey-text);
+}
+
+.searchHeader {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 7fr;
+    background-color: var(--lighter-grey-contrast);
+
+    .logo {
+        background-color: inherit;
+    }
+
+    .search {
+        background-color: inherit;
+        align-items: center;
+
+        form {
+            display: grid;
+            grid-template-columns: 4fr 1fr;
+        }
+    }
 }
 
 .artistDiv {
@@ -30,7 +52,30 @@ body {
 
     .selectButton {
         background-color: var(--spotify-green);
+        color: var(--dark-grey-black);
         border: none;
         border-radius: 5px;
     }
+}
+
+.albumDiv {
+    display: grid;
+    grid-template-columns: 2fr 6fr 2fr;
+
+    input {
+        border: none;
+        border-radius: 5px;
+    }
+}
+
+.getSongsButton {
+    background-color: var(--spotify-green);
+    color: var(--dark-grey-black);
+    font-weight: bold;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    margin: 1rem 0;
+    width: 100%;
+    padding: 1rem 0;
 }
