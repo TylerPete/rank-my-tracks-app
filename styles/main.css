@@ -1,1 +1,36 @@
 /* Styles page for the site */
+
+:root {
+    /* Colors */
+    --dark-grey-background: #242424;
+    --dark-grey-black: #121212;
+    --lighter-grey-contrast: #363636;
+    --offwhite-grey-text: #F1F3F5;
+    --white-text: #FFFFFF;
+    --spotify-green: #1DB954;
+}
+
+* {
+    background-color: var(--dark-grey-background);
+    color: var(--offwhite-grey-text);
+}
+
+body {
+    background-color: var(--dark-grey-background);
+    color: var(--offwhite-grey-text);
+}
+
+.artistDiv {
+    display: grid;
+    grid-template-columns: 2fr 6fr 2fr;
+
+    &:hover {
+        border: solid 2px var(--white-text);
+    }
+
+    .selectButton {
+        background-color: var(--spotify-green);
+        border: none;
+        border-radius: 5px;
+    }
+}

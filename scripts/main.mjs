@@ -6,6 +6,7 @@
 
 import { loadAccessToken, searchForArtists } from "./spotify-api.mjs";
 import Track from "./track.mjs";  //is this needed here??
+import { renderSearchResults } from "./search-ui.mjs";
 
 const accessToken = await loadAccessToken();
 console.log("Access token: ", accessToken);
@@ -16,4 +17,9 @@ console.log("Access token: ", accessToken);
 
 //testing the searchForResults function
 console.log("Performing test search with hardcoded keyword: 'Adele'")
-searchForArtists("Adele", accessToken, 5, undefined);
+const searchResults = await searchForArtists("Adele", accessToken, 5, undefined);
+console.log("Search results is data type array: ", Array.isArray(searchResults));
+
+const searchResultsDiv = document.querySelector("#searchResultsDiv");
+
+renderSearchResults(searchResults, searchResultsDiv, "artist");
