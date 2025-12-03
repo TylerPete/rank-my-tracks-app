@@ -15,4 +15,5 @@ console.log("Access token: ", accessToken);
 // newTrack.incrementScore();
 
 //testing the searchForResults function
+console.log("Performing test search with hardcoded keyword: 'Adele'")
 searchForArtists("Adele", accessToken, 5, undefined);
