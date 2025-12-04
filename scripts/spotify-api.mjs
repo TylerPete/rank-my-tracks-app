@@ -89,6 +89,7 @@ export async function getArtistAlbums(artistId, accessToken) {
 
 export async function getAlbumSongs(albumId, accessToken) {
     let songsEndpointURL = buildSongsURL(albumId);
+    let oneAlbumEndpointURL = buildOneAlbumURL(albumId);
 
     const options = {
         method: "GET",
@@ -98,12 +99,23 @@ export async function getAlbumSongs(albumId, accessToken) {
     }
 
     try {
+        const albumResponse = await fetch(oneAlbumEndpointURL, options);
+
         const response = await fetch(songsEndpointURL, options);
-        if (!response.ok) {
+        if (!response.ok || !albumResponse.ok) {
             throw new Error("Spotify API error");
         }
 
+        const albumData = await albumResponse.json();
+
         const data = await response.json();
+
+        data.items.forEach(track => {
+            track.albumImgUrl = albumData?.images?.[2]?.url ??
+                albumData.items.images?.[1]?.url ??
+                albumData.items.images?.[0]?.url ??
+                "images/album-placeholder-64x64.svg";
+        });
 
         return data.items;
 
@@ -120,6 +132,10 @@ function buildSearchURL(keywordString, limit, type) {
 
 function buildAlbumsURL(artistId) {
     return `${API_BASE_URL}artists/${artistId}/albums?include_groups=album,single`;
+}
+
+function buildOneAlbumURL(albumId) {
+    return `${API_BASE_URL}albums/${albumId}`;
 }
 
 function buildSongsURL(albumId) {

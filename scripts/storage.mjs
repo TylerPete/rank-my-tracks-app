@@ -3,6 +3,7 @@
 //Handles localStorage persistence.
 //Functions: saveAccessToken(accessToken), loadAccessToken(), save/load tournament progress.
 
+import { renderSearchResults } from "./search-ui.mjs";
 import { getNewAccessToken } from "./spotify-api.mjs";
 
 export async function loadAccessToken() {
@@ -22,12 +23,17 @@ export async function loadAccessToken() {
     }
 }
 
-export function saveSearchState(parentElement) {
-    localStorage.setItem("rmtSearchState", parentElement.innerHTML);
+export function saveSearchState(data, type) {
+    localStorage.setItem("rmtSearchData", JSON.stringify(data));
+    localStorage.setItem("rmtType", type);
 }
 
-export function loadSearchState() {
-    //code here to retrieve saved search state from localStorage
+export function loadSearchState(parentElement) {
+    const data = JSON.parse(localStorage.getItem("rmtSearchData"));
+    const type = localStorage.getItem("rmtType");
+
+    renderSearchResults(data, parentElement, type);
+
 }
 
 

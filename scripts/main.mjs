@@ -5,7 +5,7 @@
 //Sets up event listeners and overall app flow.
 
 import { searchForArtists } from "./spotify-api.mjs";
-import { loadAccessToken } from "./storage.mjs";
+import { loadAccessToken, loadSearchState } from "./storage.mjs";
 import Track from "./track.mjs";  //is this needed here??
 import { renderSearchResults } from "./search-ui.mjs";
 
@@ -22,7 +22,7 @@ console.log("searchBoxElement: ", searchBoxElement);
 
 const searchButton = document.querySelector("#searchButton");
 
-console.log("searchButton: ", searchButton);
+const searchResultsDiv = document.querySelector("#searchResultsDiv");
 
 searchButton.addEventListener("click", async (event) => {
     event.preventDefault();
@@ -33,11 +33,7 @@ searchButton.addEventListener("click", async (event) => {
 
     const searchResults = await searchForArtists(query, accessToken, 8, undefined);
 
-    const searchResultsDiv = document.querySelector("#searchResultsDiv");
     renderSearchResults(searchResults, searchResultsDiv, "artist");
 });
 
-//testing the searchForResults function
-// console.log("Performing test search with hardcoded keyword: 'Adele'")
-// const searchResults = await searchForArtists("Adele", accessToken, 5, undefined);
-// console.log("Search results is data type array: ", Array.isArray(searchResults));
+loadSearchState(searchResultsDiv);

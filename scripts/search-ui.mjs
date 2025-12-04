@@ -4,13 +4,15 @@
 //Handles click events to trigger album or track selection.
 import { getArtistAlbums } from "./spotify-api.mjs";
 import { searchForArtists, getAlbumSongs } from "./spotify-api.mjs";
-import { loadAccessToken } from "./storage.mjs";
+import { loadAccessToken, saveSearchState, loadSearchState } from "./storage.mjs";
 
 
 export async function renderSearchResults(data, parentElement, type) {
     const accessToken = await loadAccessToken();
 
     if (type === "artist") {
+        parentElement.classList.remove("songColumns");
+
         parentElement.innerHTML = "";
 
         data.forEach((element) => {
@@ -32,6 +34,8 @@ export async function renderSearchResults(data, parentElement, type) {
         });
 
     } else if (type === "album") {
+        parentElement.classList.remove("songColumns");
+
         parentElement.innerHTML = "";
 
         console.log("Getting albums for this artist...");
@@ -48,18 +52,29 @@ export async function renderSearchResults(data, parentElement, type) {
         const albumIds = addGetSongsButton(parentElement);
 
     } else if (type === "song") {
+        parentElement.classList.add("songColumns");
+
         parentElement.innerHTML = "";
         console.log("Logging song fetch results to console: ")
 
         const promises = data.map(albumId => getAlbumSongs(albumId, accessToken));
         const results = await Promise.all(promises);
-
         const songs = results.flat();
 
         console.log("Songs: ", songs);
+
+        songs.forEach((element) => {
+            const songElement = document.createElement("div");
+            songElement.classList.add("songDiv");
+            songElement.innerHTML = getSongTemplate(element);
+
+            parentElement.appendChild(songElement);
+        });
+
+
     }
 
-    saveSearchState(parentElement);
+    saveSearchState(data, type);
 }
 //template callback function for individual artist elements of an array returned by searchForArtists HERE
 
@@ -90,9 +105,17 @@ function getAlbumTemplate(album) {
 
     let albumDivInnerHTML = `<img src=${album.images[2].url} alt="${album.name} image" width="64" height="64">
                              <p class="name">${album.name}</p>
-                             <label for="">Include?<input type="checkbox" class="albumCheckbox" id="${album.id}" name="${album.id}" data-id="${album.id}" value="yes" checked></label>`;
+                             <label for="${album.id}">Include?<input type="checkbox" class="albumCheckbox" id="${album.id}" name="${album.id}" data-id="${album.id}" value="yes" checked></label>`;
 
     return albumDivInnerHTML;
+}
+
+function getSongTemplate(song) {
+    let songDivInnerHTML = `<img src=${song.albumImgUrl} alt="${song.name} album's image" width="52" height="52">
+                            <p class="name">${song.name}</p>
+                            <label for="${song.id}">Include?<input type="checkbox" class="songCheckbox" id="${song.id}" name="${song.id}" data-id="${song.id}" value="yes" checked></label>`;
+
+    return songDivInnerHTML;
 }
 
 function addGetSongsButton(parentElement) {

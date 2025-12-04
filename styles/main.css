@@ -45,6 +45,12 @@ body {
 #searchResultsDiv {
     width: 90%;
     margin: 0 auto;
+    display: grid;
+
+    &.songColumns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .artistDiv {
@@ -83,6 +89,34 @@ body {
     height: 72px;
 
     &:nth-of-type(odd) {
+        background-color: var(--lighter-grey-contrast);
+    }
+
+    p {
+        background-color: inherit;
+    }
+
+    label {
+        background-color: inherit;
+
+    }
+}
+
+
+/* Need to add MEDIA QUERIES for screen width to determine
+    number of columns for songs!!! */
+.songDiv {
+    display: grid;
+    grid-template-columns: 2fr 6fr 2fr;
+    padding: 0 10px;
+    align-items: center;
+    height: 72px;
+
+    &:nth-of-type(4n) {
+        background-color: var(--lighter-grey-contrast);
+    }
+
+    &:nth-of-type(4n+1) {
         background-color: var(--lighter-grey-contrast);
     }
 
