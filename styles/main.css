@@ -42,12 +42,28 @@ body {
     }
 }
 
+#searchResultsDiv {
+    width: 90%;
+    margin: 0 auto;
+}
+
 .artistDiv {
     display: grid;
     grid-template-columns: 2fr 6fr 2fr;
+    padding: 0 10px;
+    align-items: center;
+    height: 110px;
 
     &:hover {
         border: solid 2px var(--white-text);
+    }
+
+    &:nth-of-type(odd) {
+        background-color: var(--lighter-grey-contrast);
+    }
+
+    p {
+        background-color: inherit;
     }
 
     .selectButton {
@@ -55,16 +71,28 @@ body {
         color: var(--dark-grey-black);
         border: none;
         border-radius: 5px;
+        height: 44px;
     }
 }
 
 .albumDiv {
     display: grid;
     grid-template-columns: 2fr 6fr 2fr;
+    padding: 0 10px;
+    align-items: center;
+    height: 72px;
 
-    input {
-        border: none;
-        border-radius: 5px;
+    &:nth-of-type(odd) {
+        background-color: var(--lighter-grey-contrast);
+    }
+
+    p {
+        background-color: inherit;
+    }
+
+    label {
+        background-color: inherit;
+
     }
 }
 

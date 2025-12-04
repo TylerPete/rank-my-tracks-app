@@ -4,7 +4,8 @@
 //Entry point that initializes and connects all modules.
 //Sets up event listeners and overall app flow.
 
-import { loadAccessToken, searchForArtists } from "./spotify-api.mjs";
+import { searchForArtists } from "./spotify-api.mjs";
+import { loadAccessToken } from "./storage.mjs";
 import Track from "./track.mjs";  //is this needed here??
 import { renderSearchResults } from "./search-ui.mjs";
 

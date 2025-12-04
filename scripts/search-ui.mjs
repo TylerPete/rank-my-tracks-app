@@ -3,7 +3,8 @@
 //Functions for displaying search results, artist cards, and album cards.
 //Handles click events to trigger album or track selection.
 import { getArtistAlbums } from "./spotify-api.mjs";
-import { loadAccessToken, searchForArtists, getAlbumSongs } from "./spotify-api.mjs";
+import { searchForArtists, getAlbumSongs } from "./spotify-api.mjs";
+import { loadAccessToken } from "./storage.mjs";
 
 
 export async function renderSearchResults(data, parentElement, type) {
@@ -57,6 +58,8 @@ export async function renderSearchResults(data, parentElement, type) {
 
         console.log("Songs: ", songs);
     }
+
+    saveSearchState(parentElement);
 }
 //template callback function for individual artist elements of an array returned by searchForArtists HERE
 
@@ -67,7 +70,12 @@ function getArtistTemplate(artist) {
     //     <button class="selectButton">Select this Artist</button>
     // </div>
 
-    let artistDivInnerHTML = `<img src=${artist.images[2].url} alt="${artist.name} image" width="100" height="100">
+    const imgUrl = artist.images?.[2]?.url ??
+        artist.images?.[1]?.url ??
+        artist.images?.[0]?.url ??
+        "images/artist-placeholder-100x100.svg";
+
+    let artistDivInnerHTML = `<img src=${imgUrl} alt="${artist.name} image" width="100" height="100">
                               <p class="name">${artist.name}</p>
                               <button class="selectButton">Select this Artist</button>`;
 
@@ -75,6 +83,11 @@ function getArtistTemplate(artist) {
 }
 
 function getAlbumTemplate(album) {
+    const imgUrl = album.images?.[2]?.url ??
+        album.images?.[1]?.url ??
+        album.images?.[0]?.url ??
+        "images/album-placeholder-64x64.svg";
+
     let albumDivInnerHTML = `<img src=${album.images[2].url} alt="${album.name} image" width="64" height="64">
                              <p class="name">${album.name}</p>
                              <label for="">Include?<input type="checkbox" class="albumCheckbox" id="${album.id}" name="${album.id}" data-id="${album.id}" value="yes" checked></label>`;
