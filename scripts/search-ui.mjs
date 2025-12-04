@@ -49,7 +49,7 @@ export async function renderSearchResults(data, parentElement, type) {
             // albumElement.setAttribute("data-id", element.)
         });
 
-        const albumIds = addGetSongsButton(parentElement);
+        addGetSongsButton(parentElement);
 
     } else if (type === "song") {
         parentElement.classList.add("songColumns");
@@ -71,7 +71,7 @@ export async function renderSearchResults(data, parentElement, type) {
             parentElement.appendChild(songElement);
         });
 
-
+        addRankMyTracksButton(parentElement);
     }
 
     saveSearchState(data, type);
@@ -120,22 +120,43 @@ function getSongTemplate(song) {
 
 function addGetSongsButton(parentElement) {
     const getSongsButton = document.createElement("button");
-    getSongsButton.classList.add("getSongsButton");
+    getSongsButton.classList.add("goButton");
     getSongsButton.innerText = "Get Songs";
     parentElement.appendChild(getSongsButton);
 
     getSongsButton.addEventListener("click", async () => {
-        const albumCheckboxesArray = Array.from(document.querySelectorAll(".albumCheckbox"));
-
-        console.log("albumCheckboxesArray is an array: ", Array.isArray(albumCheckboxesArray));
-        // console.log("albumCheckboxesArray: ", albumCheckboxesArray);
-
-        const selectedAlbumCheckboxes = albumCheckboxesArray.filter(checkbox => checkbox.checked);
-        // console.log("selectedAlbumCheckboxes: ", selectedAlbumCheckboxes);
-
-        const selectedAlbumIds = selectedAlbumCheckboxes.map(checkbox => checkbox.dataset.id);
-        console.log("Selected album ids: ", selectedAlbumIds);
+        const selectedAlbumIds = getCheckedBoxIds("albumCheckbox");
 
         renderSearchResults(selectedAlbumIds, parentElement, "song");
     });
+}
+
+function addRankMyTracksButton(parentElement) {
+    const rankMyTracksButton = document.createElement("button");
+    rankMyTracksButton.classList.add("goButton");
+
+    rankMyTracksButton.classList.add("spanColumns");
+
+    rankMyTracksButton.innerText = "Rank My Tracks";
+    parentElement.appendChild(rankMyTracksButton);
+
+    rankMyTracksButton.addEventListener("click", async () => {
+        const selectedSongIds = getCheckedBoxIds("songCheckbox");
+
+        //
+        //
+        //code to start tournament HERE
+        //
+        //
+    });
+}
+
+function getCheckedBoxIds(className) {
+    const checkboxesArray = Array.from(document.querySelectorAll(`.${className}`));
+
+    const selectedCheckboxes = checkboxesArray.filter(checkbox => checkbox.checked);
+
+    const selectedIds = selectedCheckboxes.map(checkbox => checkbox.dataset.id);
+
+    return selectedIds;
 }

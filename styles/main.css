@@ -130,7 +130,7 @@ body {
     }
 }
 
-.getSongsButton {
+.goButton {
     background-color: var(--spotify-green);
     color: var(--dark-grey-black);
     font-weight: bold;
@@ -140,4 +140,8 @@ body {
     margin: 1rem 0;
     width: 100%;
     padding: 1rem 0;
+
+    &.spanColumns {
+        grid-column: 1 / 3;
+    }
 }
