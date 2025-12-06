@@ -57,8 +57,8 @@ function sortTracksByScore(tracksArray) {
         }
 
         //tie-breaker: "strength of schedule"
-        const aSOS = a.getOpponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore());
-        const bSOS = b.getOpponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore());
+        const aSOS = a.opponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore(), 0);
+        const bSOS = b.opponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore(), 0);
         return bSOS - aSOS;
     });
 }
@@ -69,10 +69,10 @@ function runRound(tracksArray) {
     while (currentIndex < tracksArray.length) {
         const twoTracks = tracksArray.slice(currentIndex, currentIndex + 2);
 
-        console.log(`1. ${twoTracks[0].name}`);
-        console.log(`2. ${twoTracks[1].name}`);
-
         if (twoTracks.length > 1) {
+            console.log(`1. ${twoTracks[0].name}`);
+            console.log(`2. ${twoTracks[1].name}`);
+
             const selection = parseInt(prompt("Which song do you prefer?"));
 
             recordWinner(twoTracks[selection - 1].id, tracksArray);
