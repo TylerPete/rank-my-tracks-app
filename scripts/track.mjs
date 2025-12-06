@@ -3,29 +3,13 @@
 //Contains the Track class: stores track data (id, title, artist, album, previewUrl, score) and methods like incrementScore().
 
 export default class Track {
-    constructor(trackId, title, artistId, albumId, previewUrl, score = 0) {
-        this.trackId = trackId;
-        this.title = title;
-        this.artistId = artistId;
-        this.albumId = albumId;
-        this.previewUrl = previewUrl;
+    constructor({ id, name, artistName, albumName, albumImgUrl, score = 0 }) {
+        this.id = id;
+        this.name = name;
+        this.artistName = artistName;
+        this.albumName = albumName;
+        this.albumImgUrl = albumImgUrl;
         this.score = score;
-        this.initialized = false;
-    }
-
-    async init() {
-        if (!this.initialized) {
-            console.log("Performing asynchronous initialization aspects for the track");
-
-            //asynchronous calls to the album and artist endpoints to get their respective names
-
-            //this.artistName = 
-            //this.albumName = 
-
-            this.initialized = true;
-        } else {
-            console.log("Track already initialized");
-        }
     }
 
     incrementScore() {
@@ -33,4 +17,24 @@ export default class Track {
 
         console.log("Track's new score: ", this.score);
     }
+
+    getScore() {
+        return this.score;
+    }
+}
+
+export function createTracksFromSongsInfo(songsInfo) {
+    const tracksArray = songsInfo.map((songInfo) => new Track({
+        id: songInfo.id,
+        name: songInfo.name,
+        artistName: songInfo.artists[0].name,
+        albumName: songInfo.album.name,
+        albumImgUrl: songInfo.album.images?.[2]?.url ??
+            songInfo.album.images?.[1]?.url ??
+            songInfo.album.images?.[0]?.url ??
+            "images/album-placeholder-64x64.svg",
+        score: 0
+    }));
+
+    return tracksArray;
 }

@@ -2,10 +2,11 @@
 
 //Functions for displaying search results, artist cards, and album cards.
 //Handles click events to trigger album or track selection.
-import { getArtistAlbums } from "./spotify-api.mjs";
-import { searchForArtists, getAlbumSongs } from "./spotify-api.mjs";
+import { searchForArtists, getArtistAlbums, getAlbumSongs, getSongsInfo, getOneAlbum } from "./spotify-api.mjs";
 import { loadAccessToken, saveSearchState, loadSearchState } from "./storage.mjs";
-
+import { delay } from "./utils.mjs";
+import Track, { createTracksFromSongsInfo } from "./track.mjs";
+import Tournament from "./tournament.mjs";
 
 export async function renderSearchResults(data, parentElement, type) {
     const accessToken = await loadAccessToken();
@@ -57,9 +58,33 @@ export async function renderSearchResults(data, parentElement, type) {
         parentElement.innerHTML = "";
         console.log("Logging song fetch results to console: ")
 
-        const promises = data.map(albumId => getAlbumSongs(albumId, accessToken));
-        const results = await Promise.all(promises);
-        const songs = results.flat();
+        // const promises = data.map(albumId => getAlbumSongs(albumId, accessToken));
+        // const results = await Promise.all(promises);
+        // const songs = results.flat();
+
+        const nestedSongs = [];
+        for (const albumId of data) {
+            const albumData = await getOneAlbum(albumId, accessToken);
+
+            const albumImgUrl = albumData.images?.[2]?.url ??
+                albumData.images?.[1]?.url ??
+                albumData.images?.[0]?.url ??
+                "images/album-placeholder-64x64.svg";
+
+            // artist.images?.[2]?.url ??
+            //     artist.images?.[1]?.url ??
+            //     artist.images?.[0]?.url ??
+
+            await delay(2);
+
+            const albumSongs = await getAlbumSongs(albumId, accessToken);
+            albumSongs.forEach(song => song.albumImgUrl = albumImgUrl);
+
+            nestedSongs.push(albumSongs);
+            await delay(2);
+        }
+
+        const songs = nestedSongs.flat();
 
         console.log("Songs: ", songs);
 
@@ -71,7 +96,7 @@ export async function renderSearchResults(data, parentElement, type) {
             parentElement.appendChild(songElement);
         });
 
-        addRankMyTracksButton(parentElement);
+        addRankMyTracksButton(parentElement, accessToken);
     }
 
     saveSearchState(data, type);
@@ -131,7 +156,7 @@ function addGetSongsButton(parentElement) {
     });
 }
 
-function addRankMyTracksButton(parentElement) {
+function addRankMyTracksButton(parentElement, accessToken) {
     const rankMyTracksButton = document.createElement("button");
     rankMyTracksButton.classList.add("goButton");
 
@@ -143,11 +168,12 @@ function addRankMyTracksButton(parentElement) {
     rankMyTracksButton.addEventListener("click", async () => {
         const selectedSongIds = getCheckedBoxIds("songCheckbox");
 
-        //
-        //
-        //code to start tournament HERE
-        //
-        //
+        console.log("Selected song IDs: ", selectedSongIds);
+
+        const songsInfo = await getSongsInfo(selectedSongIds, accessToken);
+
+        const tracksArray = createTracksFromSongsInfo(songsInfo);
+        const tournament = new Tournament(tracksArray);
     });
 }
 

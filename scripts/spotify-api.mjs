@@ -2,8 +2,9 @@
 
 //Fetching data from Spotify API.
 //Functions: getNewAccessToken(clientId, clientSecret), searchForResults(keywordString, type), getAlbumsByArtist(artistId), getTracksByAlbum(albumId).
-import { CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_URL, API_BASE_URL } from "./config.mjs";
+import { CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_URL, API_BASE_URL, getSpotifyGETOptions } from "./config.mjs";
 import Track from "./track.mjs";    //is this needed here??
+import { getArrayBatches, delay } from "./utils.mjs";
 
 export async function getNewAccessToken() {
     const options = {
@@ -29,12 +30,7 @@ export async function getNewAccessToken() {
 export async function searchForArtists(keywordString, accessToken, limit = 20, type = "artist") {
     let searchEndpointURL = buildSearchURL(keywordString, limit, type);
 
-    const options = {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }
+    const options = getSpotifyGETOptions(accessToken);
 
     try {
         const response = await fetch(searchEndpointURL, options);
@@ -60,12 +56,7 @@ export async function getArtistAlbums(artistId, accessToken) {
     let albumsEndpointURL = buildAlbumsURL(artistId);
     console.log("Spotify API albums endpoint URL: ", albumsEndpointURL);
 
-    const options = {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }
+    const options = getSpotifyGETOptions(accessToken);
 
     try {
         const response = await fetch(albumsEndpointURL, options);
@@ -89,33 +80,16 @@ export async function getArtistAlbums(artistId, accessToken) {
 
 export async function getAlbumSongs(albumId, accessToken) {
     let songsEndpointURL = buildSongsURL(albumId);
-    let oneAlbumEndpointURL = buildOneAlbumURL(albumId);
 
-    const options = {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }
+    const options = getSpotifyGETOptions(accessToken);
 
     try {
-        const albumResponse = await fetch(oneAlbumEndpointURL, options);
-
         const response = await fetch(songsEndpointURL, options);
-        if (!response.ok || !albumResponse.ok) {
+        if (!response.ok) {
             throw new Error("Spotify API error");
         }
 
-        const albumData = await albumResponse.json();
-
         const data = await response.json();
-
-        data.items.forEach(track => {
-            track.albumImgUrl = albumData?.images?.[2]?.url ??
-                albumData.items.images?.[1]?.url ??
-                albumData.items.images?.[0]?.url ??
-                "images/album-placeholder-64x64.svg";
-        });
 
         return data.items;
 
@@ -124,6 +98,67 @@ export async function getAlbumSongs(albumId, accessToken) {
 
         return null;
     }
+}
+
+export async function getOneAlbum(albumId, accessToken) {
+    let oneAlbumEndpointURL = buildOneAlbumURL(albumId);
+
+    const options = getSpotifyGETOptions(accessToken);
+
+    try {
+        const response = await fetch(oneAlbumEndpointURL, options);
+        if (!response.ok) {
+            throw new Error("Spotify API error");
+        }
+
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.error("Error fetching search results", error);
+
+        return null;
+    }
+}
+
+export async function getSongsInfo(songIdsArray, accessToken) {
+    const batchedIdsArray = getArrayBatches(songIdsArray, 50);
+    const options = getSpotifyGETOptions(accessToken);
+
+    let allSongsInfo = [];
+
+    let multiSongEndpointURLs = batchedIdsArray.map((batch) => buildMultiSongURL(batch));
+
+    for (const url of multiSongEndpointURLs) {
+        try {
+            const response = await fetch(url, options);
+
+            if (response.status === 429) {
+                const retryAfter = parseInt(response.headers.get("Retry-After")) || 5;
+                console.warn(`Rate limited by API. Retrying after ${retryAfter} seconds...`);
+
+                await delay(retryAfter * 1000);
+                continue;
+            }
+
+            if (!response.ok) {
+                throw new Error("Spotify API error");
+            }
+
+            const data = await response.json();
+
+            allSongsInfo = allSongsInfo.concat(data.tracks);
+
+        } catch (error) {
+            console.error("Error fetching search results", error);
+
+            return null;
+        }
+
+        await delay(10);
+    };
+
+    return allSongsInfo;
 }
 
 function buildSearchURL(keywordString, limit, type) {
@@ -140,4 +175,10 @@ function buildOneAlbumURL(albumId) {
 
 function buildSongsURL(albumId) {
     return `${API_BASE_URL}albums/${albumId}/tracks?limit=50`;
+}
+
+function buildMultiSongURL(songIdsArray) {
+    const idsParam = songIdsArray.join(",");
+
+    return `${API_BASE_URL}tracks?ids=${idsParam}`;
 }

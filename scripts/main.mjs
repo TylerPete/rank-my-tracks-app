@@ -6,15 +6,10 @@
 
 import { searchForArtists } from "./spotify-api.mjs";
 import { loadAccessToken, loadSearchState } from "./storage.mjs";
-import Track from "./track.mjs";  //is this needed here??
 import { renderSearchResults } from "./search-ui.mjs";
 
 const accessToken = await loadAccessToken();
 console.log("Access token: ", accessToken);
-
-// const newTrack = new Track("12345abc", "Guns for Hands", "21", "543349", "google.com");
-
-// newTrack.incrementScore();
 
 const searchBoxElement = document.querySelector("#searchBox");
 
