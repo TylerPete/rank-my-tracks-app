@@ -12,15 +12,38 @@ export default class Tournament {
         console.log(tracksArray);
     }
 
-    recordWinner(songId) {
-        const winner = this.tracksArray.find(track => track.id === songId);
-
-        winner.incrementScore();
-    }
-
     getTracksArray() {
         return this.tracksArray;
     }
+
+    runTournament() {
+        let currentRoundNumber = 0;
+
+        while (currentRoundNumber < this.numRounds) {
+            currentRoundNumber++;
+
+            console.log(`Starting Round ${currentRoundNumber}`);
+            runRound(this.tracksArray);
+
+            sortTracksByScore(this.tracksArray);
+        }
+
+        console.log(this.tracksArray);
+    }
+}
+
+function recordWinner(songId, tracksArray) {
+    const winner = tracksArray.find(track => track.id === songId);
+
+    winner.incrementScore();
+}
+
+function recordOpponents(twoTracks, tracksArray) {
+    const track1 = tracksArray.find(track => track.id === twoTracks[0].id);
+    const track2 = tracksArray.find(track => track.id === twoTracks[1].id);
+
+    track1.recordOpponent(track2.id);
+    track2.recordOpponent(track1.id);
 }
 
 function calculateNumSwissRounds(tracksArray) {
@@ -28,17 +51,16 @@ function calculateNumSwissRounds(tracksArray) {
 }
 
 function sortTracksByScore(tracksArray) {
-    tracksArray.sort((a, b) => b.getScore() - a.getScore());
-}
+    tracksArray.sort((a, b) => {
+        if (b.getScore() !== a.getScore()) {
+            return b.getScore() - a.getScore()
+        }
 
-function runTournament(tracksArray, numRounds) {
-    let currentRoundNumber = 1;
-
-    while (currentRoundNumber <= this.numRounds) {
-        runRound(tracksArray);
-
-        sortTracksByScore(tracksArray);
-    }
+        //tie-breaker: "strength of schedule"
+        const aSOS = a.getOpponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore());
+        const bSOS = b.getOpponents.reduce((acc, id) => acc + tracksArray.find(track => track.id === id).getScore());
+        return bSOS - aSOS;
+    });
 }
 
 function runRound(tracksArray) {
@@ -47,7 +69,17 @@ function runRound(tracksArray) {
     while (currentIndex < tracksArray.length) {
         const twoTracks = tracksArray.slice(currentIndex, currentIndex + 2);
 
-        //trigger matchup for the twoTracks
+        console.log(`1. ${twoTracks[0].name}`);
+        console.log(`2. ${twoTracks[1].name}`);
+
+        if (twoTracks.length > 1) {
+            const selection = parseInt(prompt("Which song do you prefer?"));
+
+            recordWinner(twoTracks[selection - 1].id, tracksArray);
+            recordOpponents(twoTracks, tracksArray);
+        } else if (twoTracks.length == 1) {
+            recordWinner(twoTracks[0].id, tracksArray);
+        }
 
         currentIndex += 2;
     }

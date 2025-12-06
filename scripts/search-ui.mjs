@@ -174,6 +174,8 @@ function addRankMyTracksButton(parentElement, accessToken) {
 
         const tracksArray = createTracksFromSongsInfo(songsInfo);
         const tournament = new Tournament(tracksArray);
+
+        tournament.runTournament();
     });
 }
 

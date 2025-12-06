@@ -10,16 +10,25 @@ export default class Track {
         this.albumName = albumName;
         this.albumImgUrl = albumImgUrl;
         this.score = score;
+        this.opponents = [];
     }
 
     incrementScore() {
         this.score++;
 
-        console.log("Track's new score: ", this.score);
+        console.log(`${this.name}'s new score: `, this.score);
     }
 
     getScore() {
         return this.score;
+    }
+
+    recordOpponent(opponentId) {
+        this.opponents.push(opponentId);
+    }
+
+    getOpponents() {
+        return this.opponents;
     }
 }
 
