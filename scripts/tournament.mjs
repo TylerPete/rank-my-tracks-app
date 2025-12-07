@@ -4,6 +4,7 @@
 //Methods: getNextMatchup(), recordWinner(track), isFinished(), getRankedTracks().
 import { shuffleArray } from "./utils.mjs";
 import { showMatchupAndWait } from "./matchup-ui.mjs";
+import ResultsUI from "./results-ui.mjs";
 
 export default class Tournament {
     constructor(tracksArray) {
@@ -30,6 +31,8 @@ export default class Tournament {
         }
 
         console.log("Final results: ", this.tracksArray);
+        const results = new ResultsUI(this.tracksArray, parentElement);
+        results.generateRankedList(parentElement)
     }
 }
 

@@ -141,6 +141,22 @@ body {
     }
 }
 
+.songResultDiv {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 0 10px;
+    align-items: center;
+    height: 72px;
+
+    &:nth-of-type(odd) {
+        background-color: var(--lighter-grey-contrast);
+    }
+
+    p {
+        background-color: inherit;
+    }
+}
+
 .goButton {
     background-color: var(--spotify-green);
     color: var(--dark-grey-black);
