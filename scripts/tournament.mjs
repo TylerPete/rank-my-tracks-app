@@ -3,6 +3,7 @@
 //Contains the Tournament class: handles Swiss-style tournament logic.
 //Methods: getNextMatchup(), recordWinner(track), isFinished(), getRankedTracks().
 import { shuffleArray } from "./utils.mjs";
+import { showMatchupAndWait } from "./matchup-ui.mjs";
 
 export default class Tournament {
     constructor(tracksArray) {
@@ -16,29 +17,29 @@ export default class Tournament {
         return this.tracksArray;
     }
 
-    runTournament() {
+    async runTournament(parentElement) {
         let currentRoundNumber = 0;
 
         while (currentRoundNumber < this.numRounds) {
             currentRoundNumber++;
 
             console.log(`Starting Round ${currentRoundNumber}`);
-            runRound(this.tracksArray);
+            await runRound(this.tracksArray, currentRoundNumber, this.numRounds, parentElement);
 
             sortTracksByScore(this.tracksArray);
         }
 
-        console.log(this.tracksArray);
+        console.log("Final results: ", this.tracksArray);
     }
 }
 
-function recordWinner(songId, tracksArray) {
+export function recordWinner(songId, tracksArray) {
     const winner = tracksArray.find(track => track.id === songId);
 
     winner.incrementScore();
 }
 
-function recordOpponents(twoTracks, tracksArray) {
+export function recordOpponents(twoTracks, tracksArray) {
     const track1 = tracksArray.find(track => track.id === twoTracks[0].id);
     const track2 = tracksArray.find(track => track.id === twoTracks[1].id);
 
@@ -63,7 +64,7 @@ function sortTracksByScore(tracksArray) {
     });
 }
 
-function runRound(tracksArray) {
+async function runRound(tracksArray, roundNumber, totalRounds, parentElement) {
     let currentIndex = 0;
 
     while (currentIndex < tracksArray.length) {
@@ -73,11 +74,9 @@ function runRound(tracksArray) {
             console.log(`1. ${twoTracks[0].name}`);
             console.log(`2. ${twoTracks[1].name}`);
 
-            const selection = parseInt(prompt("Which song do you prefer?"));
+            await showMatchupAndWait(twoTracks, tracksArray, roundNumber, totalRounds, parentElement);
 
-            recordWinner(twoTracks[selection - 1].id, tracksArray);
-            recordOpponents(twoTracks, tracksArray);
-        } else if (twoTracks.length == 1) {
+        } else {
             recordWinner(twoTracks[0].id, tracksArray);
         }
 

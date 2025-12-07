@@ -8,6 +8,7 @@
     --offwhite-grey-text: #F1F3F5;
     --white-text: #FFFFFF;
     --spotify-green: #1DB954;
+    --darker-spotify-green: #14813b;
 }
 
 * {
@@ -153,5 +154,60 @@ body {
 
     &.spanColumns {
         grid-column: 1 / 3;
+    }
+}
+
+#matchupModal {
+    margin: auto auto;
+    width: 80%;
+    height: 80%;
+    max-width: 600px;
+
+    h2,
+    h3 {
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+
+    .twoSongDiv {
+        display: grid;
+        grid-template-columns: 3fr 1fr 3fr;
+        text-align: center;
+        margin-top: 20px;
+        align-items: center;
+
+        .vsText {
+            font-size: 32px;
+        }
+
+        .matchupTrack {
+            .trackName {
+                line-height: 1.5;
+                color: var(--offwhite-grey-text);
+
+                span {
+                    color: var(--white-text);
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                }
+            }
+
+            .choiceButton {
+                width: 100%;
+                margin: 1rem 0;
+                padding: 1rem 0;
+                font-size: 1.5rem;
+                font-weight: bold;
+                background-color: var(--spotify-green);
+                color: var(--dark-grey-black);
+                border: none;
+                border-radius: 5px;
+
+                &:hover {
+                    background-color: var(--darker-spotify-green);
+                    border: 1px solid var(--white-text);
+                }
+            }
+        }
     }
 }
