@@ -32,8 +32,9 @@ export function loadSearchState(parentElement) {
     const data = JSON.parse(localStorage.getItem("rmtSearchData"));
     const type = localStorage.getItem("rmtType");
 
-    renderSearchResults(data, parentElement, type);
-
+    if (data !== null && type !== null) {
+        renderSearchResults(data, parentElement, type);
+    }
 }
 
 

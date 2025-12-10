@@ -10,6 +10,9 @@ export default class ResultsUI {
     }
 
     generateRankedList() {
+        const instructions = document.querySelector("#instructionsMessage");
+        instructions.textContent = "Your selected songs, ranked from favorite to least favorite!"
+
         this.parentElement.innerHTML = "";
         this.parentElement.classList.remove("songColumns");
 
@@ -27,7 +30,9 @@ export default class ResultsUI {
 }
 
 function getSongResultTemplate(song, index) {
-    let songDivInnerHTML = `<img src=${song.albumImgUrl} alt="${song.name} album's image" width="52" height="52">
+    const imgUrl = song.albumImgUrl || "images/album-placeholder-64x64.svg";
+
+    let songDivInnerHTML = `<img src="${song.albumImgUrl}" alt="${song.name} album's image" width="52" height="52">
                             <p class="name">${index + 1}. ${song.name}</p>`;
 
     return songDivInnerHTML;

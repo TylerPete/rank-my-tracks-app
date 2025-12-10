@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Tyler Matthew Peterson">
+    <meta name="description"
+        content="RankMyTracks: a web app designed to help fans rank any artist's songs from their favorite to least favorite through a song tournament.">
+
     <title>RankMyTracks App</title>
 
     <link rel="stylesheet" href="styles/main.css">
@@ -12,10 +16,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href=""> <!--FILL THIS IN-->
 
     <script src="scripts/main.mjs" type="module" defer></script>
-
-    <!-- FILL IN OTHER ESSENTIAL META TAGS AND OTHER TAGS WITHIN <head> -->
 </head>
 
 <body>
@@ -32,33 +35,10 @@
         </div>
     </header>
     <main>
-        <h1>[Site under construction -- JavaScript modules in progress.</h1>
-        <p>Please see browser console for evidence of work in progress.</p>
-
-        <!-- <dialog id="matchupModal">
-            Testing matchup modal here
-            <h3>Round 3 of 7</h3>
-            <h2>Which song do you prefer?</h2>
-            <div class="twoSongDiv">
-                <figure class="matchupTrack">
-                    <img src="images/album-placeholder-64x64.svg" alt="placeholder text" width="128" height="128">
-                    <figcaption class="trackName"><span>Track A Title</span>
-                        <br>Album Name
-                        <br>Artist Name
-                    </figcaption>
-                    <button class="choiceButton" data-id="">Choose Track A</button>
-                </figure>
-                <h3 class="vsText">vs</h3>
-                <figure class="matchupTrack">
-                    <img src="images/album-placeholder-64x64.svg" alt="placeholder text" width="128" height="128">
-                    <figcaption class="trackName"><span>Track B Title</span>
-                        <br>Album Name
-                        <br>Artist Name
-                    </figcaption>
-                    <button class="choiceButton" data-id="">Choose Track B</button>
-                </figure>
-            </div>
-        </dialog> -->
+        <h1>Welcome to RankMyTracks!</h1>
+        <p id="instructionsMessage">Use the search box at the top of the page to find your favorite artists or albums.
+            Then, rank songs by choosing which of the two onscreen you
+            prefer!</p>
 
         <div id="searchResultsDiv">
             <!-- Dynamically-generated search results here-->

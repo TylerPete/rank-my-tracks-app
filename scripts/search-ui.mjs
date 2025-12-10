@@ -10,8 +10,11 @@ import Tournament from "./tournament.mjs";
 
 export async function renderSearchResults(data, parentElement, type) {
     const accessToken = await loadAccessToken();
+    const instructions = document.querySelector("#instructionsMessage");
+    instructions.textContent = "";
 
     if (type === "artist") {
+        instructions.textContent = "Click to select an artist from the list below.";
         parentElement.classList.remove("songColumns");
 
         parentElement.innerHTML = "";
@@ -35,6 +38,7 @@ export async function renderSearchResults(data, parentElement, type) {
         });
 
     } else if (type === "album") {
+        instructions.textContent = "Select your desired albums using the checkboxes at the right side of the page, then click 'Get Songs'!";
         parentElement.classList.remove("songColumns");
 
         parentElement.innerHTML = "";
@@ -53,6 +57,7 @@ export async function renderSearchResults(data, parentElement, type) {
         addGetSongsButton(parentElement);
 
     } else if (type === "song") {
+        instructions.textContent = "Select all songs you wish to rank, and then proceed by clicking 'Rank My Tracks!'";
         parentElement.classList.add("songColumns");
 
         parentElement.innerHTML = "";

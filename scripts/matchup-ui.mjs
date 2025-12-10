@@ -31,10 +31,10 @@ export function showMatchupAndWait(twoTracks, tracksArray, roundNumber, totalRou
         ${getTrackFigureTemplate(twoTracks[1])}
         </div>`;
 
-        parentElement.appendChild(matchupModal);
+        parentElement.parentElement.parentElement.appendChild(matchupModal);
         matchupModal.showModal();
 
-        const choiceButtons = document.querySelectorAll(".choiceButton");
+        const choiceButtons = matchupModal.querySelectorAll(".choiceButton");
         choiceButtons.forEach((button) => {
             button.addEventListener("click", (event) => {
                 const winnerId = event.target.dataset.id;
@@ -54,7 +54,7 @@ export function showMatchupAndWait(twoTracks, tracksArray, roundNumber, totalRou
 
 function getTrackFigureTemplate(track) {
     return `<figure class="matchupTrack">
-            <img src="${track.albumImgUrl}" alt="${track.name}'s album artwork" width="128" height="128"
+            <img src="${track.albumImgUrl}" alt="${track.name}'s album artwork" width="128" height="128">
             <figcaption class="trackName"><span>${track.name}</span>
             <br>${track.albumName}
             <br>${track.artistName}
