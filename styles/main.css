@@ -64,15 +64,42 @@ body {
     }
 }
 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    display: none;
+
+    &.loading {
+        display: block;
+        border: 4px solid #eee;
+        border-top: 4px solid #333;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        animation: spin 0.8s linear infinite;
+    }
+}
+
+
 .artistDiv {
     display: grid;
     grid-template-columns: 2fr 6fr 2fr;
     padding: 0 10px;
     align-items: center;
     height: 110px;
+    transition: transform 0.15s ease-in-out;
 
     &:hover {
         border: solid 2px var(--white-text);
+        transform: scale(1.05);
     }
 
     &:nth-of-type(odd) {
@@ -98,6 +125,7 @@ body {
     padding: 0 10px;
     align-items: center;
     height: 72px;
+    transition: transform 0.15s ease-in-out;
 
     &:nth-of-type(odd) {
         background-color: var(--lighter-grey-contrast);
@@ -111,6 +139,11 @@ body {
         background-color: inherit;
 
     }
+
+    &:hover {
+        transform: scale(1.05);
+        border: solid 1px var(--white-text);
+    }
 }
 
 
@@ -122,6 +155,7 @@ body {
     padding: 0 10px;
     align-items: center;
     height: 72px;
+    transition: transform 0.15s ease-in-out;
 
     &:nth-of-type(4n) {
         background-color: var(--lighter-grey-contrast);
@@ -137,7 +171,11 @@ body {
 
     label {
         background-color: inherit;
+    }
 
+    &:hover {
+        transform: scale(1.05);
+        border: solid 1px var(--white-text);
     }
 }
 
@@ -147,14 +185,21 @@ body {
     padding: 0 10px;
     align-items: center;
     height: 72px;
+    transform: translateX(200px);
+    transition: transform 0.35s linear;
+
+    p {
+        background-color: inherit;
+    }
 
     &:nth-of-type(odd) {
         background-color: var(--lighter-grey-contrast);
     }
 
-    p {
-        background-color: inherit;
+    &.added {
+        transform: translateX(0px);
     }
+
 }
 
 .goButton {
@@ -178,6 +223,9 @@ body {
     width: 80%;
     height: 80%;
     max-width: 600px;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 
     h2,
     h3 {
@@ -211,19 +259,30 @@ body {
             .choiceButton {
                 width: 100%;
                 margin: 1rem 0;
-                padding: 1rem 0;
+                padding: 1rem 0.1rem;
                 font-size: 1.5rem;
                 font-weight: bold;
                 background-color: var(--spotify-green);
                 color: var(--dark-grey-black);
                 border: none;
                 border-radius: 5px;
+                transition: transform 0.1s ease-in-out;
 
                 &:hover {
                     background-color: var(--darker-spotify-green);
                     border: 1px solid var(--white-text);
+                    transform: translateY(-2px);
+                }
+
+                &:active {
+                    transform: translateY(0);
                 }
             }
         }
+    }
+
+    &.open {
+        opacity: 1;
+        transform: scale(1.0);
     }
 }

@@ -34,6 +34,7 @@ export async function searchForArtists(keywordString, accessToken, limit = 20, t
 
     try {
         const response = await fetch(searchEndpointURL, options);
+
         if (!response.ok) {
             throw new Error("Spotify API error");
         }
@@ -60,6 +61,7 @@ export async function getArtistAlbums(artistId, accessToken) {
 
     try {
         const response = await fetch(albumsEndpointURL, options);
+
         if (!response.ok) {
             throw new Error("Spotify API error");
         }
@@ -85,6 +87,7 @@ export async function getAlbumSongs(albumId, accessToken) {
 
     try {
         const response = await fetch(songsEndpointURL, options);
+
         if (!response.ok) {
             throw new Error("Spotify API error");
         }
@@ -166,7 +169,7 @@ function buildSearchURL(keywordString, limit, type) {
 }
 
 function buildAlbumsURL(artistId) {
-    return `${API_BASE_URL}artists/${artistId}/albums?include_groups=album,single`;
+    return `${API_BASE_URL}artists/${artistId}/albums?include_groups=album,single&limit=50`;
 }
 
 function buildOneAlbumURL(albumId) {

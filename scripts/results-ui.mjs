@@ -2,6 +2,7 @@
 
 //Contains ResultsUI class to display final ranked list.
 //Functions to generate DOM elements for ranked tracks and playback buttons.
+import { changeInstructionsMessage, delay } from "./utils.mjs";
 
 export default class ResultsUI {
     constructor(tracksArray, parentElement) {
@@ -9,9 +10,8 @@ export default class ResultsUI {
         this.parentElement = parentElement;
     }
 
-    generateRankedList() {
-        const instructions = document.querySelector("#instructionsMessage");
-        instructions.textContent = "Your selected songs, ranked from favorite to least favorite!"
+    async generateRankedList() {
+        changeInstructionsMessage("Your selected songs, ranked from favorite to least favorite!");
 
         this.parentElement.innerHTML = "";
         this.parentElement.classList.remove("songColumns");
@@ -23,9 +23,17 @@ export default class ResultsUI {
             return songDiv;
         });
 
-        songDivArray.forEach(songDiv => {
-            this.parentElement.appendChild(songDiv);
-        });
+        for (let i = songDivArray.length - 1; i >= 0; i--) {
+            this.parentElement.prepend(songDivArray[i]);
+            await delay(1);
+            songDivArray[i].classList.add("added");
+            await delay(250);
+        }
+
+        // songDivArray.forEach(songDiv => async function () {
+        //     this.parentElement.appendChild(songDiv);
+        //     await delay(100);
+        // });
     }
 }
 

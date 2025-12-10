@@ -33,6 +33,7 @@ export function showMatchupAndWait(twoTracks, tracksArray, roundNumber, totalRou
 
         parentElement.parentElement.parentElement.appendChild(matchupModal);
         matchupModal.showModal();
+        matchupModal.classList.add("open");
 
         const choiceButtons = matchupModal.querySelectorAll(".choiceButton");
         choiceButtons.forEach((button) => {

@@ -36,3 +36,18 @@ export function shuffleArray(array) {
 
     return array;
 }
+
+export function showLoader() {
+    const loader = document.querySelector(".loader");
+    loader.classList.add("loading");
+}
+
+export function hideLoader() {
+    const loader = document.querySelector(".loader");
+    loader.classList.remove("loading");
+}
+
+export function changeInstructionsMessage(instructionsString) {
+    const instructions = document.querySelector("#instructionsMessage");
+    instructions.textContent = instructionsString;
+}

@@ -4,17 +4,15 @@
 //Handles click events to trigger album or track selection.
 import { searchForArtists, getArtistAlbums, getAlbumSongs, getSongsInfo, getOneAlbum } from "./spotify-api.mjs";
 import { loadAccessToken, saveSearchState, loadSearchState } from "./storage.mjs";
-import { delay } from "./utils.mjs";
+import { delay, showLoader, hideLoader, changeInstructionsMessage } from "./utils.mjs";
 import Track, { createTracksFromSongsInfo } from "./track.mjs";
 import Tournament from "./tournament.mjs";
 
 export async function renderSearchResults(data, parentElement, type) {
     const accessToken = await loadAccessToken();
-    const instructions = document.querySelector("#instructionsMessage");
-    instructions.textContent = "";
+    changeInstructionsMessage("Click to select an artist from the list below.");
 
     if (type === "artist") {
-        instructions.textContent = "Click to select an artist from the list below.";
         parentElement.classList.remove("songColumns");
 
         parentElement.innerHTML = "";
@@ -38,7 +36,7 @@ export async function renderSearchResults(data, parentElement, type) {
         });
 
     } else if (type === "album") {
-        instructions.textContent = "Select your desired albums using the checkboxes at the right side of the page, then click 'Get Songs'!";
+        changeInstructionsMessage("Select your desired albums using the checkboxes at the right side of the page, then click 'Get Songs'!");
         parentElement.classList.remove("songColumns");
 
         parentElement.innerHTML = "";
@@ -51,23 +49,27 @@ export async function renderSearchResults(data, parentElement, type) {
             albumElement.innerHTML = getAlbumTemplate(element);
 
             parentElement.appendChild(albumElement);
-            // albumElement.setAttribute("data-id", element.)
+
+            albumElement.addEventListener("click", (event) => {
+                const clickedElement = event.currentTarget;
+                const associatedCheckbox = clickedElement.querySelector("input");
+                associatedCheckbox.checked = !associatedCheckbox.checked;
+            });
         });
 
         addGetSongsButton(parentElement);
 
     } else if (type === "song") {
-        instructions.textContent = "Select all songs you wish to rank, and then proceed by clicking 'Rank My Tracks!'";
         parentElement.classList.add("songColumns");
 
         parentElement.innerHTML = "";
         console.log("Logging song fetch results to console: ")
 
-        // const promises = data.map(albumId => getAlbumSongs(albumId, accessToken));
-        // const results = await Promise.all(promises);
-        // const songs = results.flat();
-
         const nestedSongs = [];
+
+        showLoader();
+        changeInstructionsMessage("Loading songs...");
+
         for (const albumId of data) {
             const albumData = await getOneAlbum(albumId, accessToken);
 
@@ -88,10 +90,12 @@ export async function renderSearchResults(data, parentElement, type) {
             nestedSongs.push(albumSongs);
             await delay(2);
         }
+        hideLoader();
 
         const songs = nestedSongs.flat();
 
         console.log("Songs: ", songs);
+        changeInstructionsMessage("Select all songs you wish to rank, and then proceed by clicking 'Rank My Tracks!'");
 
         songs.forEach((element) => {
             const songElement = document.createElement("div");
@@ -99,6 +103,12 @@ export async function renderSearchResults(data, parentElement, type) {
             songElement.innerHTML = getSongTemplate(element);
 
             parentElement.appendChild(songElement);
+
+            songElement.addEventListener("click", (event) => {
+                const clickedElement = event.currentTarget;
+                const associatedCheckbox = clickedElement.querySelector("input");
+                associatedCheckbox.checked = !associatedCheckbox.checked;
+            });
         });
 
         addRankMyTracksButton(parentElement, accessToken);

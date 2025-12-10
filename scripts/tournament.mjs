@@ -32,7 +32,7 @@ export default class Tournament {
 
         console.log("Final results: ", this.tracksArray);
         const results = new ResultsUI(this.tracksArray, parentElement);
-        results.generateRankedList();
+        await results.generateRankedList();
     }
 }
 
