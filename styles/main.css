@@ -37,18 +37,39 @@ body {
     align-items: center;
     grid-template-columns: 1fr 7fr;
     background-color: var(--lighter-grey-contrast);
+    height: 52px;
+    align-items: center;
 
     .logo {
         background-color: inherit;
+        height: 100%;
+
+        img {
+            height: 100%;
+            ;
+        }
     }
 
     .search {
+        height: 100%;
         background-color: inherit;
         align-items: center;
 
         form {
+            background-color: inherit;
             display: grid;
             grid-template-columns: 4fr 1fr;
+            align-items: center;
+            height: 100%;
+
+            input {
+                padding: 0.3rem 0;
+            }
+
+            button {
+                padding: 0.3rem 0;
+                width: 80%;
+            }
         }
     }
 }
