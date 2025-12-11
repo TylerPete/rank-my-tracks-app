@@ -5,7 +5,7 @@
 //Sets up event listeners and overall app flow.
 
 import { searchForArtists } from "./spotify-api.mjs";
-import { loadAccessToken, loadSearchState } from "./storage.mjs";
+import { saveSearchState, loadAccessToken, loadSearchState } from "./storage.mjs";
 import { renderSearchResults } from "./search-ui.mjs";
 
 const accessToken = await loadAccessToken();
@@ -29,6 +29,12 @@ searchButton.addEventListener("click", async (event) => {
     const searchResults = await searchForArtists(query, accessToken, 8, undefined);
 
     renderSearchResults(searchResults, searchResultsDiv, "artist");
+});
+
+const logoResetButton = document.querySelector(".logo");
+logoResetButton.addEventListener("click", function () {
+    saveSearchState(null, null);
+    window.location.reload();
 });
 
 loadSearchState(searchResultsDiv);
