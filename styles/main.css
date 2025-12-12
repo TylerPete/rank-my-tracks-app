@@ -32,6 +32,12 @@ h6 {
     font-family: Montserrat;
 }
 
+input,
+button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 body {
     background-color: var(--dark-grey-background);
     color: var(--offwhite-grey-text);
